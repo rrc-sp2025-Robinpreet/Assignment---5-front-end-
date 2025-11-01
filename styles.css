@@ -1,0 +1,77 @@
+:root {
+  --accent: #19476e;
+  --light: #d1d4d9;
+  --card: #d8cbcb;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--light);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 250px;
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.results {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.article {
+  background: var(--card);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 1rem;
+}
+
+.article img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.article h3 {
+  margin: 0.6rem 0;
+}
+
+.article p {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
