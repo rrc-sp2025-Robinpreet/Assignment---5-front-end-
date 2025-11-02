@@ -4,73 +4,52 @@ Date - 01-11-2025
 */ 
 
 const API_KEY = "74d85b12933843ecbe31a087577d4682"; 
-const BASE_URL = "https://newsapi.org/v2/everything";
 
-const form = document.getElementById("search-form"); 
-const queryInput = document.getElementById("query");
-const statusEl = document.getElementById("status");
-const resultsEl = document.getElementById("results");
+const form = document.getElementById("searchForm");
+const keywordInput = document.getElementById("keyword");
+const resultsSection = document.getElementById("results");
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const query = queryInput.value.trim();
+form.addEventListener("submit", async (e) => {
+  e.preventDefault(); // stops form from refreshing the page
 
-  if (!query) {
-    statusEl.textContent = "Please enter a keyword.";
+  const keyword = keywordInput.value.trim();
+  if (!keyword) {
+    resultsSection.innerHTML = "<p>Please enter a keyword.</p>";
     return;
   }
 
-  resultsEl.innerHTML = "";
-  statusEl.textContent = "Searching...";
-  form.querySelector("button").disabled = true;
+  resultsSection.innerHTML = "<p>Loading results...</p>";
 
   try {
-    const articles = await fetchNews(query);
-    renderResults(articles);
+    const response = await fetch(
+      `https://newsapi.org/v2/everything?q=${encodeURIComponent(
+        keyword
+      )}&apiKey=${API_KEY}`
+    );
+
+    if (!response.ok) throw new Error("Network response was not ok");
+
+    const data = await response.json();
+
+    if (data.articles.length === 0) {
+      resultsSection.innerHTML = "<p>No results found.</p>";
+      return;
+    }
+
+    resultsSection.innerHTML = data.articles
+      .map(
+        (article) => `
+        <article class="news-card">
+          ${article.urlToImage ? `<img src="${article.urlToImage}" alt="News image" style="width:100%; border-radius:8px; margin-bottom:10px;">` : ""}
+          <h2>${article.title}</h2>
+          <p>${article.description || "No description available."}</p>
+          <a href="${article.url}" target="_blank">Read more</a>
+        </article>
+      `
+      )
+      .join("");
   } catch (error) {
-    console.error(error);
-    statusEl.textContent = "Error: Could not load news articles.";
-  } finally {
-    form.querySelector("button").disabled = false;
+    resultsSection.innerHTML = `<p>Error: ${error.message}</p>`;
+    console.error("Error fetching news:", error);
   }
 });
-
-async function fetchNews(query) {
-  const url = `${BASE_URL}?q=${encodeURIComponent(query)}&pageSize=10&sortBy=publishedAt&apiKey=${API_KEY}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Network response was not ok (${response.status})`);
-  }
-
-  const data = await response.json();
-
-  if (data.status !== "ok") {
-    throw new Error(data.message || "API returned an error.");
-  }
-
-  return data.articles;
-}
-
-function renderResults(articles) {
-  if (!articles || articles.length === 0) {
-    statusEl.textContent = "No results found.";
-    return;
-  }
-
-  statusEl.textContent = `Showing ${articles.length} articles.`;
-
-  const html = articles
-    .map(
-      (a) => `
-      <article class="article">
-        ${a.urlToImage ? `<img src="${a.urlToImage}" alt="News image">` : ""}
-        <h3><a href="${a.url}" target="_blank">${a.title}</a></h3>
-        <p>${a.description || "No description available."}</p>
-        <small><strong>${a.source.name}</strong> – ${new Date(a.publishedAt).toLocaleString()}</small>
-      </article>`
-    )
-    .join("");
-
-  resultsEl.innerHTML = html;
-}

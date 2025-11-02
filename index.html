@@ -1,15 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>News Search App</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News Search</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
     <h1>News Search</h1>
-    <p>Type a keyword to search the latest news articles using NewsAPI.</p>
+    <p>“Type a keyword and let's see what the world's freaking out about today🌍.</p>
   </header>
 
-  
+  <form id="searchForm">
+    <input type="text" id="keyword" placeholder="Enter keyword..." required />
+    <button type="submit">Search</button>
+  </form>
+
+  <section id="results"></section>
+
+  <script src="script.js"></script>
+</body>
+</html>
