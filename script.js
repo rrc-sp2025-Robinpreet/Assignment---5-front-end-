@@ -52,3 +52,25 @@ async function fetchNews(query) {
   return data.articles;
 }
 
+function renderResults(articles) {
+  if (!articles || articles.length === 0) {
+    statusEl.textContent = "No results found.";
+    return;
+  }
+
+  statusEl.textContent = `Showing ${articles.length} articles.`;
+
+  const html = articles
+    .map(
+      (a) => `
+      <article class="article">
+        ${a.urlToImage ? `<img src="${a.urlToImage}" alt="News image">` : ""}
+        <h3><a href="${a.url}" target="_blank">${a.title}</a></h3>
+        <p>${a.description || "No description available."}</p>
+        <small><strong>${a.source.name}</strong> – ${new Date(a.publishedAt).toLocaleString()}</small>
+      </article>`
+    )
+    .join("");
+
+  resultsEl.innerHTML = html;
+}
